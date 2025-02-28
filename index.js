@@ -1,65 +1,82 @@
-var TodoList = /** @class */ (function () {
-    function TodoList() {
+
+class TodoList {
+    constructor() {
         this.todos = [];
         this.nextId = 1;
     }
-    TodoList.prototype.addTodo = function (task, dueDate) {
-        var newTodo = {
+
+    addTodo(task, dueDate) {
+        const newTodo = {
             id: this.nextId++,
-            task: task,
+            task,
             completed: false,
-            dueDate: dueDate,
+            dueDate,
         };
         this.todos.push(newTodo);
-        console.log("Added: ".concat(task));
-    };
-    TodoList.prototype.completeTodo = function (id) {
-        var todo = this.todos.find(function (todo) { return todo.id === id; });
+        console.log(`Added: "${task}" (Due: ${dueDate.toDateString()})`);
+    }
+ 
+    completeTodo(id) {
+        const todo = this.todos.find(todo => todo.id === id);
         if (todo) {
             todo.completed = true;
-            console.log("Completed: ".concat(todo.task));
+            console.log(`Completed: "${todo.task}"`);
         }
         else {
-            console.log("Todo with ID ".concat(id, " not found."));
+            console.log(`Todo with ID ${id} not found.`);
         }
-    };
-    TodoList.prototype.removeTodo = function (id) {
-        var index = this.todos.findIndex(function (todo) { return todo.id === id; });
+    }
+ 
+    removeTodo(id) {
+        const index = this.todos.findIndex(todo => todo.id === id);
         if (index !== -1) {
-            console.log("Removed: ".concat(this.todos[index].task));
+            console.log(`Removed: "${this.todos[index].task}"`);
             this.todos.splice(index, 1);
         }
         else {
-            console.log("Todo with ID ".concat(id, " not found."));
+            console.log(`Todo with ID ${id} not found.`);
         }
-    };
-    TodoList.prototype.listTodos = function () {
-        return this.todos;
-    };
-    TodoList.prototype.filterTodos = function (completed) {
-        return this.todos.filter(function (todo) { return todo.completed === completed; });
-    };
-    TodoList.prototype.updateTodo = function (id, newTask) {
-        var todo = this.todos.find(function (todo) { return todo.id === id; });
+    }
+  
+    listTodos() {
+        if (this.todos.length === 0) {
+            console.log("No todos found.");
+            return;
+        }
+        console.log("\nTodo List:");
+        this.todos.forEach(todo => {
+            console.log(`[${todo.id}] ${todo.task} - ${todo.completed ? "✅ Completed" : "⏳ Pending"} (Due: ${todo.dueDate.toDateString()})`);
+        });
+    }
+
+    filterTodos(completed) {
+        return this.todos.filter(todo => todo.completed === completed);
+    }
+ 
+    updateTodo(id, newTask) {
+        const todo = this.todos.find(todo => todo.id === id);
         if (todo) {
             todo.task = newTask;
-            console.log("Updated: ".concat(todo.task));
+            console.log(`Updated: "${newTask}"`);
         }
         else {
-            console.log("Todo with ID ".concat(id, " not found."));
+            console.log(`Todo with ID ${id} not found.`);
         }
-    };
-    TodoList.prototype.clearCompleted = function () {
-        this.todos = this.todos.filter(function (todo) { return !todo.completed; });
-        console.log("Cleared all completed todos.");
-    };
-    return TodoList;
-}());
+    }
 
-var myTodoList = new TodoList();
+    clearCompleted() {
+        this.todos = this.todos.filter(todo => !todo.completed);
+        console.log("Cleared all completed todos.");
+    }
+}
+
+const myTodoList = new TodoList();
 myTodoList.addTodo("Learn TypeScript", new Date("2025-02-28"));
-myTodoList.addTodo("Build a project", new Date("2025-02-28"));
+myTodoList.addTodo("Build a project", new Date("2025-08-28"));
+myTodoList.listTodos();
 myTodoList.completeTodo(1);
-console.log(myTodoList.listTodos());
-myTodoList.removeTodo(2);
-console.log(myTodoList.listTodos());
+myTodoList.listTodos();
+myTodoList.updateTodo(2, "Build an awesome project");
+myTodoList.listTodos();
+myTodoList.clearCompleted();
+myTodoList.listTodos();
